@@ -366,9 +366,9 @@ func main() {
 	stats.latencies = make([]time.Duration, 0, 500000)
 	histopt := hist.HistogramOptions{
 		NumBuckets:         16,
-		GrowthFactor:       1.0,
+		GrowthFactor:       1.8,
 		SmallestBucketSize: 1000,
-		MinValue:           1000,
+		MinValue:           10000,
 	}
 	stats.histogram = hist.NewHistogram(histopt)
 	clients := createClients(s.Connection, s.Address)
