@@ -2,26 +2,28 @@
 
 files=$*
 
+imports="auto_imports.go"
+echo "package main" > $imports
 function setup () {
     for f in $files;
     do
-        name=`basename $f`
-        cp $f client/$name
+        importpath=`realpath $f | awk '{gsub(ENVIRON["GOPATH"]"/src/", "", $0); print}'`
+        echo "import _ \"$importpath\"" >> $imports
     done
+    touch fperf.go
 }
 function cleanup() {
     for f in $files;
     do
-        name=`basename $f`
-        rm -f client/$name
+        rm -f $imports
     done
 }
 
 if [ $# = 0 ];then
     echo "Usage: $0 <testcase>"
     echo "For example"
-    echo " Build publish testcase:"
-    echo "  $0 testcases/publish_client.go"
+    echo " Build mqtt testcase:"
+    echo "  $0 testcases/mqtt"
     echo " Or build all testcases:"
     echo "  $0 testcases/*"
     echo ""
