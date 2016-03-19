@@ -8,7 +8,6 @@ import (
 	hist "github.com/shafreeck/fperf/stats"
 	"golang.org/x/net/context"
 	"log"
-	"net"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -21,22 +20,20 @@ import (
 )
 
 type setting struct {
-	Connection     int
-	Stream         int
-	Goroutine      int
-	Cpu            int
-	Burst          int
-	Tick           time.Duration
-	Address        string
-	Send           bool
-	Recv           bool
-	NoDelay        bool
-	SendBufferSize int
-	RecvBufferSize int
-	Async          bool
-	Target         string
-	CallType       string
-	InfluxDB       string
+	Connection int
+	Stream     int
+	Goroutine  int
+	Cpu        int
+	Burst      int
+	Tick       time.Duration
+	Address    string
+	Send       bool
+	Recv       bool
+	NoDelay    bool
+	Async      bool
+	Target     string
+	CallType   string
+	InfluxDB   string
 }
 
 type statistics struct {
@@ -48,23 +45,6 @@ type roundtrip struct {
 	start time.Time
 	end   time.Time
 	ack   bool
-}
-
-func dial(address string, timeout time.Duration) (net.Conn, error) {
-	conn, err := net.DialTimeout("tcp", address, timeout)
-	if err != nil {
-		return nil, err
-	}
-
-	tcpConn := conn.(*net.TCPConn)
-	tcpConn.SetNoDelay(s.NoDelay)
-	if s.RecvBufferSize > 0 {
-		tcpConn.SetReadBuffer(s.RecvBufferSize)
-	}
-	if s.SendBufferSize > 0 {
-		tcpConn.SetWriteBuffer(s.SendBufferSize)
-	}
-	return conn, nil
 }
 
 func createClients(n int, addr string) []client.Client {
@@ -317,8 +297,6 @@ func main() {
 	flag.BoolVar(&s.NoDelay, "nodelay", true, "nodelay means sending requests ASAP")
 	flag.DurationVar(&s.Tick, "tick", 2*time.Second, "interval between statistics")
 	flag.StringVar(&s.Address, "server", "127.0.0.1:8804", "address of the target server")
-	flag.IntVar(&s.SendBufferSize, "sndbuf", 0, "send buffer size")
-	flag.IntVar(&s.RecvBufferSize, "rcvbuf", 0, "recv buffer size")
 	flag.BoolVar(&s.Async, "async", false, "send and recv in seperate goroutines")
 	flag.StringVar(&s.CallType, "type", "auto", "set the call type:unary, stream or auto. default is auto")
 	flag.StringVar(&s.InfluxDB, "influxdb", "", "writing stats to influxdb, specify the address in this option")
