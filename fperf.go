@@ -25,6 +25,7 @@ type setting struct {
 	Goroutine  int
 	Cpu        int
 	Burst      int
+	N          int //number of requests
 	Tick       time.Duration
 	Address    string
 	Send       bool
@@ -82,13 +83,15 @@ func benchmarkStream(n int, streams []client.Stream) {
 	var wg sync.WaitGroup
 	for _, stream := range streams {
 		for i := 0; i < n; i++ {
+			//Notice here. we must pass stream as a parameter because the varibale stream
+			//would be changed after the goroutine created
 			if s.Async {
 				wg.Add(2)
-				go send(nil, stream)
-				go recv(nil, stream)
+				go func(stream client.Stream) { send(nil, stream); wg.Done() }(stream)
+				go func(stream client.Stream) { recv(nil, stream); wg.Done() }(stream)
 			} else {
 				wg.Add(1)
-				go run(nil, stream)
+				go func(stream client.Stream) { run(nil, stream); wg.Done() }(stream)
 			}
 		}
 	}
@@ -101,7 +104,7 @@ func benchmarkUnary(n int, clients []client.Client) {
 		for i := 0; i < n; i++ {
 			wg.Add(1)
 			if cli, ok := cli.(client.UnaryClient); ok {
-				go runUnary(nil, cli)
+				go func(cli client.UnaryClient) { runUnary(nil, cli); wg.Done() }(cli)
 			} else {
 				log.Fatalln(s.Target, " does not implement the client.UnaryClient")
 			}
@@ -112,7 +115,7 @@ func benchmarkUnary(n int, clients []client.Client) {
 }
 
 func runUnary(done <-chan int, cli client.UnaryClient) {
-	for {
+	for i := 0; s.N == 0 || i < s.N; i++ {
 		//select {
 		//case <-done:
 		//	log.Println("run goroutine exit done")
@@ -129,7 +132,7 @@ func runUnary(done <-chan int, cli client.UnaryClient) {
 	}
 }
 func run(done <-chan int, stream client.Stream) {
-	for {
+	for i := 0; s.N == 0 || i < s.N; i++ {
 		select {
 		case <-done:
 			log.Println("run goroutine exit done")
@@ -151,7 +154,7 @@ func run(done <-chan int, stream client.Stream) {
 
 func send(done <-chan int, stream client.Stream) {
 	timer := time.NewTimer(time.Second)
-	for {
+	for i := 0; s.N == 0 || i < s.N; i++ {
 		select {
 		case <-done:
 			log.Println("send goroutine exit, done")
@@ -179,7 +182,7 @@ func send(done <-chan int, stream client.Stream) {
 }
 func recv(done <-chan int, stream client.Stream) {
 	timer := time.NewTimer(time.Second)
-	for {
+	for i := 0; s.N == 0 || i < s.N; i++ {
 		select {
 		case <-done:
 			log.Println("recv goroutine exit, done")
@@ -215,6 +218,7 @@ func recv(done <-chan int, stream client.Stream) {
 func statPrint() {
 	tickc := time.Tick(s.Tick)
 	var latencies []time.Duration
+	total := int64(0)
 	for {
 		select {
 		case <-tickc:
@@ -223,11 +227,12 @@ func statPrint() {
 
 			sum := time.Duration(0)
 			for _, eplase := range latencies {
+				total += 1
 				sum += eplase
 			}
 			count := len(latencies)
 			if count != 0 {
-				log.Printf("latency %v qps %d\n", sum/time.Duration(count), int64(float64(count)/float64(s.Tick)*float64(time.Second)))
+				log.Printf("latency %v qps %d total %v\n", sum/time.Duration(count), int64(float64(count)/float64(s.Tick)*float64(time.Second)), total)
 				if influxdb != nil {
 					bp, _ := db.NewBatchPoints(db.BatchPointsConfig{
 						Database:  "fperf",
@@ -292,6 +297,7 @@ func main() {
 	flag.IntVar(&s.Goroutine, "goroutine", 1, "number of goroutines per stream")
 	flag.IntVar(&s.Cpu, "cpu", 0, "set the GOMAXPROCS, use go default if 0")
 	flag.IntVar(&s.Burst, "burst", 0, "burst a number of request, use with -async=true")
+	flag.IntVar(&s.N, "N", 0, "number of request per goroutine")
 	flag.BoolVar(&s.Send, "send", true, "perform send action")
 	flag.BoolVar(&s.Recv, "recv", true, "perform recv action")
 	flag.BoolVar(&s.NoDelay, "nodelay", true, "nodelay means sending requests ASAP")
