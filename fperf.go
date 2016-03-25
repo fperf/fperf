@@ -14,7 +14,6 @@ import (
 	"os/signal"
 	"runtime"
 	"sync"
-	"sync/atomic"
 	"syscall"
 	"time"
 )
@@ -262,19 +261,10 @@ func statPrint() {
 	}
 }
 
-func IdGen(min, max uint32) func() uint32 {
-	id := min
-	return func() uint32 {
-		atomic.AddUint32(&id, 1)
-		return id%max + min
-	}
-}
-
 var s setting
 var stats statistics
 var rtts = make(chan *roundtrip, 10*1024*1024)
 var mutex sync.RWMutex
-var ider = IdGen(0, 10*1024*1024-1)
 var burst chan int
 var influxdb db.Client
 
