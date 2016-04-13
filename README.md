@@ -26,12 +26,13 @@ A stream client is a client to send and receive data by stream or datagram. TCP 
 can be implemented as stream client. Google's grpc has a stream mode and can be used as a stream
 client. See [grpc_testing](client/grpc_testing_client.go)
 ```
-type Client interface {
-        Dial(addr string) error
+type StreamClient interface {
+	Client
+	CreateStream(ctx context.Context) (Stream, error)
 }
-type UnaryClient interface {
-        Client
-        Request() error
+type Stream interface {
+	DoSend() error
+	DoRecv() error
 }
 ```
 
