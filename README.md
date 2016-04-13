@@ -32,14 +32,8 @@ with only 1 stream. This is because the stream is not thread-safty
 Set the influxdb address, grpcperf will automatic create a grpcbenchmark table and writing
 into the qps and lantency metrics.
 
-* **-nodelay=true: nodelay means sending requests ASAP**  
-Set the tcp nodelay option
-
-* **-sndbuf=0: send buffer size**  
-Set the tcp send buffer size
-
-* **-rcvbuf=0: recv buffer size**  
-Set the tcp recv buffer size
+* **-delay=0: wait <delay> time before send the next request**  
+Set the time to wait before send a request
 
 * **-recv=true: perform recv action**  
 Only used in stream mode. Just enable the recving goroutine.
