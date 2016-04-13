@@ -29,7 +29,7 @@ type setting struct {
 	Address    string
 	Send       bool
 	Recv       bool
-	NoDelay    bool
+	Delay      time.Duration
 	Async      bool
 	Target     string
 	CallType   string
@@ -127,6 +127,9 @@ func runUnary(done <-chan int, cli client.UnaryClient) {
 		eplase := time.Since(start)
 		stats.latencies = append(stats.latencies, eplase)
 		stats.histogram.Add(int64(eplase))
+		if s.Delay > 0 {
+			time.Sleep(s.Delay)
+		}
 		//	}
 	}
 }
@@ -147,6 +150,9 @@ func run(done <-chan int, stream client.Stream) {
 			eplase := time.Since(start)
 			stats.latencies = append(stats.latencies, eplase)
 			stats.histogram.Add(int64(eplase))
+			if s.Delay > 0 {
+				time.Sleep(s.Delay)
+			}
 		}
 	}
 }
@@ -176,6 +182,9 @@ func send(done <-chan int, stream client.Stream) {
 			}
 
 			stream.DoSend()
+			if s.Delay > 0 {
+				time.Sleep(s.Delay)
+			}
 		}
 	}
 }
@@ -209,6 +218,9 @@ func recv(done <-chan int, stream client.Stream) {
 				stats.histogram.Add(int64(eplase))
 			case <-timer.C:
 				log.Println("blocked on recv rtts")
+			}
+			if s.Delay > 0 {
+				time.Sleep(s.Delay)
 			}
 		}
 	}
@@ -290,7 +302,7 @@ func main() {
 	flag.IntVar(&s.N, "N", 0, "number of request per goroutine")
 	flag.BoolVar(&s.Send, "send", true, "perform send action")
 	flag.BoolVar(&s.Recv, "recv", true, "perform recv action")
-	flag.BoolVar(&s.NoDelay, "nodelay", true, "nodelay means sending requests ASAP")
+	flag.DurationVar(&s.Delay, "delay", 0, "wait delay time before send the next request")
 	flag.DurationVar(&s.Tick, "tick", 2*time.Second, "interval between statistics")
 	flag.StringVar(&s.Address, "server", "127.0.0.1:8804", "address of the target server")
 	flag.BoolVar(&s.Async, "async", false, "send and recv in seperate goroutines")
