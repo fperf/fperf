@@ -6,6 +6,38 @@ This is a framework for common performance testing evolving from my another proj
 If you can not wait to run `fperf` to see how it works, you can follow the [quickstart](docs/quickstart.md)
  here.
 
+## Customize testcase
+You can build your own testcase based on fperf framework. A testcase in fact is a client that
+implement the client.Client or to say more precise client.UnaryClient or client.StreamClient.
+
+An unary client is a client to send requests. It works in request-reply model. For example,
+HTTP benchmark client is an unary client. See [http_testing](client/http_testing_client.go).
+```
+type Client interface {
+        Dial(addr string) error
+}
+type UnaryClient interface {
+        Client
+        Request() error
+}
+```
+
+A stream client is a client to send and receive data by stream or datagram. TCP and UDP nomarlly
+can be implemented as stream client. Google's grpc has a stream mode and can be used as a stream
+client. See [grpc_testing](client/grpc_testing_client.go)
+```
+type Client interface {
+        Dial(addr string) error
+}
+type UnaryClient interface {
+        Client
+        Request() error
+}
+```
+
+## Build custom testcases
+TODO
+
 ## Run benchmark
 ### Options
 * **-N : number of the requests issued per goroutine**
