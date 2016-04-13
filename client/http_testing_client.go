@@ -26,6 +26,6 @@ func (c *httpClient) Dial(addr string) error {
 }
 
 func (c *httpClient) Request() error {
-	c.cli.Get(c.url)
-	return nil
+	_, err := c.cli.Get(c.url)
+	return err
 }
