@@ -37,7 +37,7 @@ type Stream interface {
 ```
 
 ### Three steps to create your own testcase
-1. Create the "NewClient" function
+1.Create the "NewClient" function
 
 ```go
 package demo
@@ -55,7 +55,7 @@ func NewDemoClient(flag *client.FlagSet) client.Client {
 }
 ```
 
-2. Implement the UnaryClient or StreamClient
+2.Implement the UnaryClient or StreamClient
 ```go
 func (c *DemoClient) Dial(addr string) error {
 	fmt.Println("Dial to", addr)
@@ -68,7 +68,7 @@ func (c *DemoClient) Request() error {
 }
 ```
 
-3. Register to fperf
+3.Register to fperf
 ```go
 func init() {
 	client.Register("demo", NewDemoClient, "This is a demo client discription")
