@@ -19,7 +19,7 @@ Used with -async option. use birst to limit the counts of request the sending go
 default is unlimited.
 
 * **-connection=1: number of connection**  
-Set the number of grpc connection will be created.
+Set the number of connection will be created.
 
 * **-cpu=0: set the GOMAXPROCS, use go default if 0**  
 Set the GOMAXPROCS, default is 0, which means use the golang default option.
@@ -29,7 +29,7 @@ Set the number of goroutines, should only be used when testing is unary mode or 
 with only 1 stream. This is because the stream is not thread-safty
 
 * **-influxdb="": writing stats to influxdb, specify the address in this option**  
-Set the influxdb address, grpcperf will automatic create a grpcbenchmark table and writing
+Set the influxdb address, fperf will automatic create a fperf table and inserting 
 into the qps and lantency metrics.
 
 * **-delay=0: wait <delay> time before send the next request**  
@@ -41,8 +41,8 @@ Only used in stream mode. Just enable the recving goroutine.
 * **-send=true: perform send action**
 Only used in stream mode. Just enable the sending goroutine.
 
-* **-server="127.0.0.1:8804": address of grpc server**  
-Set the address of the target grpc server
+* **-server="127.0.0.1:8804": address of the remote server**  
+Set the address of the target server
 
 * **-stream=1: number of streams per connection**  
 Set the number of stream will be created. Only being used in stream mode.
@@ -52,5 +52,5 @@ Set the interval time between output the qps and latency metrics
 
 * **-type="auto": set the call type:unary, stream or auto. default is auto**  
 Set the type of your testcase. This option can be used when your testcase implement
-unary and stream client at the same time and in this case grpc can not judge the type
+unary and stream client at the same time and in this case fperf can not judge the type
 automaticlly
