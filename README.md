@@ -12,7 +12,7 @@ implement the client.Client or to say more precise client.UnaryClient or client.
 
 An unary client is a client to send requests. It works in request-reply model. For example,
 HTTP benchmark client is an unary client. See [http_testing](client/http_testing_client.go).
-```
+```go
 type Client interface {
         Dial(addr string) error
 }
@@ -25,7 +25,7 @@ type UnaryClient interface {
 A stream client is a client to send and receive data by stream or datagram. TCP and UDP nomarlly
 can be implemented as stream client. Google's grpc has a stream mode and can be used as a stream
 client. See [grpc_testing](client/grpc_testing_client.go)
-```
+```go
 type StreamClient interface {
 	Client
 	CreateStream(ctx context.Context) (Stream, error)
@@ -76,7 +76,7 @@ func init() {
 ```
 
 ### Build custom testcases
-There are two ways to build the custom testcase.  
+You testcase should be in the same workspace(same $GOPATH) with fperf. There are two ways to build the custom testcase.  
 * Import the testcase package explicitly
 
 Edit fperf.go and insert
