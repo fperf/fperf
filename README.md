@@ -8,6 +8,7 @@ If you can not wait to run `fperf` to see how it works, you can follow the [quic
 
 ## Run benchmark
 ### Options
+* **-N : number of the requests issued per goroutine**
 * **-async=false: send and recv in seperate goroutines**  
 Only used in stream mode. Use two groutine per stream, one for sending and another for recving.
 defualt is false.
