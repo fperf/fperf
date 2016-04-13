@@ -143,3 +143,7 @@ Set the interval time between output the qps and latency metrics
 Set the type of your testcase. This option can be used when your testcase implement
 unary and stream client at the same time and in this case fperf can not judge the type
 automaticlly
+
+### Draw live graph with grafana
+
+TODO export data into influxdb and draw graph with grafana
