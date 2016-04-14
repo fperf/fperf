@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	Register("http_testing", NewHTTPClient, "benchmark for http server")
+	Register("http_testing", newHTTPClient, "benchmark for http server")
 }
 
 type httpClient struct {
@@ -13,7 +13,7 @@ type httpClient struct {
 	url string
 }
 
-func NewHTTPClient(flag *FlagSet) Client {
+func newHTTPClient(flag *FlagSet) Client {
 	c := new(httpClient)
 	flag.StringVar(&c.url, "url", "", "set the url you request")
 	flag.Parse()

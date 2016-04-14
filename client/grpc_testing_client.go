@@ -8,14 +8,14 @@ import (
 )
 
 func init() {
-	Register("grpc_testing", NewTestpbClient, "benchmark for grpc/benchmark/grpc_testing")
+	Register("grpc_testing", newTestpbClient, "benchmark for grpc/benchmark/grpc_testing")
 }
 
 type testpbClient struct {
 	cli testpb.TestServiceClient
 }
 
-func NewTestpbClient(flag *FlagSet) Client {
+func newTestpbClient(flag *FlagSet) Client {
 	return new(testpbClient)
 }
 
