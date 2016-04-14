@@ -1,5 +1,3 @@
-package main
-
 /*
 ### Three steps to create your own testcase
 1.Create the "NewClient" function
@@ -39,8 +37,8 @@ func init() {
 	client.Register("demo", NewDemoClient, "This is a demo client discription")
 }
 ```
-
 */
+package main
 
 import (
 	"flag"
