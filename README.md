@@ -48,21 +48,21 @@ import (
 	"time"
 )
 
-type DemoClient struct{}
+type demoClient struct{}
 
-func NewDemoClient(flag *client.FlagSet) client.Client {
-	return &DemoClient{}
+func newDemoClient(flag *client.FlagSet) client.Client {
+	return &demoClient{}
 }
 ```
 
 2.Implement the UnaryClient or StreamClient
 ```go
-func (c *DemoClient) Dial(addr string) error {
+func (c *demoClient) Dial(addr string) error {
 	fmt.Println("Dial to", addr)
 	return nil
 }
 
-func (c *DemoClient) Request() error {
+func (c *demoClient) Request() error {
 	time.Sleep(100 * time.Millisecond)
 	return nil
 }
@@ -71,7 +71,7 @@ func (c *DemoClient) Request() error {
 3.Register to fperf
 ```go
 func init() {
-	client.Register("demo", NewDemoClient, "This is a demo client discription")
+	client.Register("demo", dewDemoClient, "This is a demo client discription")
 }
 ```
 
