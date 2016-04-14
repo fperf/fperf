@@ -1,8 +1,8 @@
 # Start
-This is a tutorial about how to used the fperf command line. We will take the builtin testcase "http_testing" as the example.
+This is a tutorial about how to use the fperf command line. We will take the builtin testcase "http_testing" as an example.
 
 ## Installing
-`fperf` is developed in golang, make sure you have the setup the go envirment correctly.
+`fperf` is developed in golang, make sure you have setup the go environment correctly.
 
 then
 ```
@@ -17,7 +17,7 @@ go install
 ```
 
 ## Run benchmark
-`fperf` in fact is a performance benchmark framework, you can use it to develope your own performance benchmark tools.
+`fperf` in fact is a performance benchmark framework, you can use it to develop your own performance benchmark tools.
 It has some demo implementation builtin including `http_testing` and `grpc_testing`. We will take the `http_testing` to
 demonstrate how to use `fperf`
 
@@ -26,7 +26,7 @@ demonstrate how to use `fperf`
 fperf http_testing -url http://example.com
 ```
 
-We call the `http_testing` a testcase, `fperf` runs the testcase and pass the url to it. This will run the benchmark
+We call the `http_testing` a testcase, `fperf` runs the testcase and pass an url to it. This will run the benchmark
 with default fperf options(1 connection, 1 goroutine, no delay)
 
 ### Run by concurrency
