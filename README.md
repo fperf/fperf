@@ -1,6 +1,6 @@
 # Framework of performance testing 
 
-This is a framework for common performance testing evolving from my another project `grpcperf`
+fperf is a framework which allows you to develop your own benchmark tools has never been easier.
 
 ## Quick Start
 If you can not wait to run `fperf` to see how it works, you can follow the [quickstart](docs/quickstart.md)
@@ -143,3 +143,7 @@ Set the interval time between output the qps and latency metrics
 Set the type of your testcase. This option can be used when your testcase implement
 unary and stream client at the same time and in this case fperf can not judge the type
 automaticlly
+
+### Draw live graph with grafana
+
+TODO export data into influxdb and draw graph with grafana
