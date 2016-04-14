@@ -5,37 +5,37 @@ Three steps to create your own testcase
 
 1. Create the "NewClient" function
 
-package demo
+	package demo
 
-import (
-	"fmt"
-	"github.com/shafreeck/fperf/client"
-	"time"
-)
+	import (
+		"fmt"
+		"github.com/shafreeck/fperf/client"
+		"time"
+	)
 
-type DemoClient struct{}
+	type DemoClient struct{}
 
-func NewDemoClient(flag *client.FlagSet) client.Client {
-	return &DemoClient{}
-}
+	func NewDemoClient(flag *client.FlagSet) client.Client {
+		return &DemoClient{}
+	}
 
 2. Implement the UnaryClient or StreamClient
 
-func (c *DemoClient) Dial(addr string) error {
-	fmt.Println("Dial to", addr)
-	return nil
-}
+	func (c *DemoClient) Dial(addr string) error {
+		fmt.Println("Dial to", addr)
+		return nil
+	}
 
-func (c *DemoClient) Request() error {
-	time.Sleep(100 * time.Millisecond)
-	return nil
-}
+	func (c *DemoClient) Request() error {
+		time.Sleep(100 * time.Millisecond)
+		return nil
+	}
 
 3. Register to fperf
 
-func init() {
-	client.Register("demo", NewDemoClient, "This is a demo client discription")
-}
+	func init() {
+		client.Register("demo", NewDemoClient, "This is a demo client discription")
+	}
 */
 package main
 
