@@ -1,6 +1,6 @@
 # Framework of performance testing 
 
-This is a framework for common performance testing evolving from my another project `grpcperf`
+fperf is a framework which allows you to develop your own benchmark tools has never been easier.
 
 ## Quick Start
 If you can not wait to run `fperf` to see how it works, you can follow the [quickstart](docs/quickstart.md)
