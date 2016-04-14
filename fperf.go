@@ -1,6 +1,9 @@
 /*
+fperf allows you to build your performace tools easily
+
 Three steps to create your own testcase
-1.Create the "NewClient" function
+
+1. Create the "NewClient" function
 
 package demo
 
@@ -16,7 +19,7 @@ func NewDemoClient(flag *client.FlagSet) client.Client {
 	return &DemoClient{}
 }
 
-2.Implement the UnaryClient or StreamClient
+2. Implement the UnaryClient or StreamClient
 
 func (c *DemoClient) Dial(addr string) error {
 	fmt.Println("Dial to", addr)
@@ -28,7 +31,7 @@ func (c *DemoClient) Request() error {
 	return nil
 }
 
-3.Register to fperf
+3. Register to fperf
 
 func init() {
 	client.Register("demo", NewDemoClient, "This is a demo client discription")
