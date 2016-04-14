@@ -80,7 +80,7 @@ You testcase should be in the same workspace(same $GOPATH) with fperf. There are
 #### Import the testcase package explicitly
 
 Edit fperf.go and insert
-```
+```go
 import _ "github.com/shafreeck/fperf/example/demo"
 ```
 
