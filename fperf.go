@@ -37,7 +37,10 @@ Three steps to create your own testcase
 		client.Register("demo", NewDemoClient, "This is a demo client discription")
 	}
 
-Run the buildin testcase: http_testing
+
+Run the buildin testcase
+
+http_testing is a simple builtin testcase to benchmark http servers
 
 	fperf -cpu 8 -connection 10 http_testing -url http://example.com
 */
