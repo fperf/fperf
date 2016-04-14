@@ -68,7 +68,7 @@ type setting struct {
 	Connection int
 	Stream     int
 	Goroutine  int
-	Cpu        int
+	CPU        int
 	Burst      int
 	N          int //number of requests
 	Tick       time.Duration
@@ -284,7 +284,7 @@ func statPrint() {
 
 			sum := time.Duration(0)
 			for _, eplase := range latencies {
-				total += 1
+				total++
 				sum += eplase
 			}
 			count := len(latencies)
@@ -343,7 +343,7 @@ func main() {
 	flag.IntVar(&s.Connection, "connection", 1, "number of connection")
 	flag.IntVar(&s.Stream, "stream", 1, "number of streams per connection")
 	flag.IntVar(&s.Goroutine, "goroutine", 1, "number of goroutines per stream")
-	flag.IntVar(&s.Cpu, "cpu", 0, "set the GOMAXPROCS, use go default if 0")
+	flag.IntVar(&s.CPU, "cpu", 0, "set the GOMAXPROCS, use go default if 0")
 	flag.IntVar(&s.Burst, "burst", 0, "burst a number of request, use with -async=true")
 	flag.IntVar(&s.N, "N", 0, "number of request per goroutine")
 	flag.BoolVar(&s.Send, "send", true, "perform send action")
@@ -370,7 +370,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	runtime.GOMAXPROCS(s.Cpu)
+	runtime.GOMAXPROCS(s.CPU)
 	go func() {
 		runtime.SetBlockProfileRate(1)
 		log.Println(http.ListenAndServe(":6060", nil))

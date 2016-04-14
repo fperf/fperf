@@ -6,22 +6,22 @@ import (
 	"time"
 )
 
-type DemoClient struct{}
+type demoClient struct{}
 
-func NewDemoClient(flag *client.FlagSet) client.Client {
-	return &DemoClient{}
+func newDemoClient(flag *client.FlagSet) client.Client {
+	return &demoClient{}
 }
 
-func (c *DemoClient) Dial(addr string) error {
+func (c *demoClient) Dial(addr string) error {
 	fmt.Println("Dial to", addr)
 	return nil
 }
 
-func (c *DemoClient) Request() error {
+func (c *demoClient) Request() error {
 	time.Sleep(100 * time.Millisecond)
 	return nil
 }
 
 func init() {
-	client.Register("demo", NewDemoClient, "This is a demo client discription")
+	client.Register("demo", newDemoClient, "This is a demo client discription")
 }

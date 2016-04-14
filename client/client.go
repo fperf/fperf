@@ -47,7 +47,7 @@ func AllClients() map[string]string {
 	return m
 }
 
-//The interface use can choose to implement
+//Client use Dial to connect to the server
 type Client interface {
 	Dial(addr string) error
 }
