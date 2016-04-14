@@ -39,7 +39,7 @@ Three steps to create your own testcase
 
 Run the buildin testcase: http_testing
 
-fperf -cpu 8 -connection 10 http_testing -url http://example.com
+	fperf -cpu 8 -connection 10 http_testing -url http://example.com
 */
 package main
 
