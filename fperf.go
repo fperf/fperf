@@ -385,7 +385,7 @@ func main() {
 			Addr: s.InfluxDB,
 		})
 		if err != nil {
-			log.Fatalf("Error creating InfluxDB Client: ", err.Error())
+			log.Fatalf("Error creating InfluxDB Client: %v", err.Error())
 		}
 		defer c.Close()
 		q := db.NewQuery("CREATE DATABASE fperf", "", "")
