@@ -49,7 +49,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	db "github.com/influxdb/influxdb/client/v2"
+	db "github.com/influxdata/influxdb/client/v2"
 	"github.com/shafreeck/fperf/client"
 	hist "github.com/shafreeck/fperf/stats"
 	"golang.org/x/net/context"
