@@ -21,3 +21,12 @@ func TestNewClient(t *testing.T) {
 		t.Fail()
 	}
 }
+func TestAllClients(t *testing.T) {
+	for c := range AllClients() {
+		t.Logf("%v\n", c)
+	}
+}
+
+func TestRegister(t *testing.T) {
+	Register("test", func(flag *FlagSet) Client { return &testcli{} }, "test description")
+}
