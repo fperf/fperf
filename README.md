@@ -1,4 +1,5 @@
 # Framework of performance testing 
+[![Go Report Card](https://goreportcard.com/badge/github.com/shafreeck/fperf)](https://goreportcard.com/report/github.com/shafreeck/fperf)
 
 fperf is a powerful and flexible framework which allows you to develop your own benchmark tools has never been easier.
 **You create the client and send requests, fperf do the concurrency and statistics, then give you a report about qps and latency.**
