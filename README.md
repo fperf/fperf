@@ -1,4 +1,5 @@
 # Framework of performance testing 
+[![Build Status](https://travis-ci.org/shafreeck/fperf.svg?branch=master)](https://travis-ci.org/shafreeck/fperf)
 [![Go Report Card](https://goreportcard.com/badge/github.com/shafreeck/fperf)](https://goreportcard.com/report/github.com/shafreeck/fperf)
 
 fperf is a powerful and flexible framework which allows you to develop your own benchmark tools has never been easier.
