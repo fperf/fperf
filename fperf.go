@@ -101,7 +101,9 @@ func createClients(n int, addr string) []client.Client {
 			log.Fatalf("Can not find client %q for benchmark\n", s.Target)
 		}
 
-		cli.Dial(addr)
+		if err := cli.Dial(addr); err != nil {
+			log.Fatalln(err)
+		}
 		clients[i] = cli
 	}
 	return clients
