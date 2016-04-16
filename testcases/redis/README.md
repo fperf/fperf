@@ -13,7 +13,7 @@ servers at first.
 
 ## Coding: 3 steps to build a redis benchmark tool
 
-You can find the source code from [testcases/redis/redis.go](testcases/redis/redis.go)
+You can find the source code from [testcases/redis/redis.go](redis.go)
 
 ### Create the NewClientFunc function
 ```go
@@ -109,4 +109,4 @@ Count: 101781  Min: 16491  Max: 42468733  Avg: 43377.29
 [    277158,     759048)      43    0.0%  100.0%
 ```
 
-See the [quick start](docs/quickstart.md) to learn about the output of fperf.
+See the [quick start](../../docs/quickstart.md) to learn about the output of fperf.
