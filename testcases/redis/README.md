@@ -5,11 +5,11 @@ benchmark and load testing tool easily. All the knowledge you should
 know is how to send a request and fperf will handle the concurrency and 
 statistics.
 
-The is an example about how to build a redis benchmark tool with fperf in 
+This is an example about how to build a redis benchmark tool with fperf in 
 3 steps. You can alse build tools for other common servers like mysql, nginx, 
 memcached or your own servers. Maybe building benchmark tools for private servers 
-is the most cases you need fperf. In fact, fperf indeed is created to benchmark our grpc 
-servers at first.
+is the most cases you need fperf. In fact, fperf is actually created to benchmark 
+our grpc servers at first.
 
 ## Coding: 3 steps to build a redis benchmark tool
 
