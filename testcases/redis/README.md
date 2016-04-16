@@ -15,7 +15,7 @@ servers at first.
 
 You can find the source code from [testcases/redis/redis.go](redis.go)
 
-### Create the NewClientFunc function
+### Create the [NewClientFunc](https://godoc.org/github.com/shafreeck/fperf/client#NewClientFunc) function
 ```go
 //newRedisClient create the client object. The function should be
 //registered to fperf, fperf -h will list all the registered clients(testcases)
