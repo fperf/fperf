@@ -1,8 +1,8 @@
 # Build redis performance tool using fperf
 
 `fperf` is a powerful and flexible framework allows you to build your own
-benchmark and load testing tool easily. All the knowledge you should to
-know is how to send a request and fperf will handles the concurrency and 
+benchmark and load testing tool easily. All the knowledge you should 
+know is how to send a request and fperf will handle the concurrency and 
 statistics.
 
 The is an example about how to build a redis benchmark tool with fperf in 
