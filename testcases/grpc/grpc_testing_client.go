@@ -1,6 +1,7 @@
-package client
+package grpc
 
 import (
+	"github.com/shafreeck/fperf/client"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	testpb "google.golang.org/grpc/benchmark/grpc_testing"
@@ -8,14 +9,14 @@ import (
 )
 
 func init() {
-	Register("grpc_testing", newTestpbClient, "benchmark for grpc/benchmark/grpc_testing")
+	client.Register("grpc_testing", newTestpbClient, "benchmark for grpc/benchmark/grpc_testing")
 }
 
 type testpbClient struct {
 	cli testpb.TestServiceClient
 }
 
-func newTestpbClient(flag *FlagSet) Client {
+func newTestpbClient(flag *client.FlagSet) client.Client {
 	return new(testpbClient)
 }
 
@@ -42,7 +43,7 @@ func (r *testpbClient) Request() error {
 }
 
 //Stream test
-func (r *testpbClient) CreateStream(ctx context.Context) (Stream, error) {
+func (r *testpbClient) CreateStream(ctx context.Context) (client.Stream, error) {
 	s, err := r.cli.StreamingCall(ctx)
 	pl := newPayload(0, 20)
 	return &testpbStream{stream: s, pl: pl}, err
