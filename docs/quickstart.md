@@ -9,13 +9,6 @@ then
 go get github.com/shafreeck/fperf
 ```
 
-or build from source 
-
-```
-git clone https://github.com/shafreeck/fperf.git
-go install
-```
-
 ## Run benchmark
 `fperf` in fact is a performance benchmark framework, you can use it to develop your own performance benchmark tools.
 It has some demo implementation builtin including `http_testing` and `grpc_testing`. We will take the `http_testing` to
