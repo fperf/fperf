@@ -1,6 +1,6 @@
 all:fperf
 GC?=go
-fperf:fperf.go client/*.go
+fperf:fperf.go client/*.go *.go
 	$(GC) build -o fperf
 
 server:example/server/main.go
