@@ -40,9 +40,9 @@ Three steps to create your own testcase
 
 Run the buildin testcase
 
-http_testing is a simple builtin testcase to benchmark http servers
+http is a simple builtin testcase to benchmark http servers
 
-	fperf -cpu 8 -connection 10 http_testing -url http://example.com
+	fperf -cpu 8 -connection 10 http http://example.com
 */
 package main
 

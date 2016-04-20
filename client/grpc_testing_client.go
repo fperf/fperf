@@ -41,6 +41,7 @@ func (r *testpbClient) Request() error {
 	return nil
 }
 
+//Stream test
 func (r *testpbClient) CreateStream(ctx context.Context) (Stream, error) {
 	s, err := r.cli.StreamingCall(ctx)
 	pl := newPayload(0, 20)

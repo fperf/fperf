@@ -15,7 +15,7 @@ You can build your own testcase based on fperf framework. A testcase in fact is 
 implement the client.Client or to say more precisely client.UnaryClient or client.StreamClient.
 
 An unary client is a client to send requests. It works in request-reply model. For example,
-HTTP benchmark client is an unary client. See [http_testing](client/http_testing_client.go).
+HTTP benchmark client is an unary client. See [http client](testcases/http/httpclient.go).
 ```go
 type Client interface {
         Dial(addr string) error
