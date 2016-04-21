@@ -1,6 +1,8 @@
 package client
 
 import (
+	"flag"
+	"os"
 	"testing"
 )
 
@@ -29,4 +31,11 @@ func TestAllClients(t *testing.T) {
 
 func TestRegister(t *testing.T) {
 	Register("test", func(flag *FlagSet) Client { return &testcli{} }, "test description")
+}
+
+func TestParse(t *testing.T) {
+	os.Args = []string{"fperf"}
+	flag.CommandLine.Parse(os.Args)
+	fs := &FlagSet{flag.NewFlagSet("test", flag.PanicOnError)}
+	fs.Parse()
 }
