@@ -90,7 +90,6 @@ type statistics struct {
 type roundtrip struct {
 	start time.Time
 	end   time.Time
-	ack   bool
 }
 
 func createClients(n int, addr string) []client.Client {
@@ -214,7 +213,7 @@ func send(done <-chan int, stream client.Stream) {
 			return
 		default:
 			select {
-			case rtts <- &roundtrip{start: time.Now(), ack: false}:
+			case rtts <- &roundtrip{start: time.Now()}:
 				timer.Reset(time.Second)
 			case <-timer.C:
 				log.Println("blocked on send rtts")
@@ -260,7 +259,6 @@ func recv(done <-chan int, stream client.Stream) {
 			select {
 			case rtt := <-rtts:
 				timer.Reset(time.Second)
-				rtt.ack = true
 				eplase := time.Since(rtt.start)
 				stats.latencies = append(stats.latencies, eplase)
 				stats.histogram.Add(int64(eplase))
