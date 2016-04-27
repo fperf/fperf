@@ -87,11 +87,15 @@ type statistics struct {
 	histogram *hist.Histogram
 }
 
+//roundtrip will be used in async mode
+//the sender and receiver will be in seperate goroutines
 type roundtrip struct {
 	start time.Time
 	end   time.Time
 }
 
+//create the testcase clients, n is the number of clients, set by
+//flag -connection
 func createClients(n int, addr string) []client.Client {
 	clients := make([]client.Client, n)
 	for i := 0; i < n; i++ {
@@ -107,6 +111,8 @@ func createClients(n int, addr string) []client.Client {
 	}
 	return clients
 }
+
+//create streams for every client. n is the number of streams per client
 func createStreams(n int, clients []client.Client) []client.Stream {
 	streams := make([]client.Stream, n*len(clients))
 	for cur, cli := range clients {
@@ -125,6 +131,7 @@ func createStreams(n int, clients []client.Client) []client.Stream {
 	return streams
 }
 
+//run benchmark for stream clients, can be in async or sync mode
 func benchmarkStream(n int, streams []client.Stream) {
 	var wg sync.WaitGroup
 	for _, stream := range streams {
@@ -144,6 +151,8 @@ func benchmarkStream(n int, streams []client.Stream) {
 	go statPrint()
 	wg.Wait()
 }
+
+//run benchmark for unary clients
 func benchmarkUnary(n int, clients []client.Client) {
 	var wg sync.WaitGroup
 	for _, cli := range clients {
