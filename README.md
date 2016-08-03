@@ -79,20 +79,21 @@ func init() {
 }
 ```
 
-### Build custom testcases
+### Building custom testcases
 You testcase should be in the same workspace(same $GOPATH) with fperf. There are two ways to build the custom testcase.  
-#### Import the testcase package explicitly
+#### Importing the testcase package explicitly
 
 Edit fperf.go and insert
 ```go
 import _ "github.com/shafreeck/fperf/example/demo"
 ```
 
-#### Use fperf-build
+#### Using fperf-build
 
 `fperf-build` is a tool to build custom testcases. It accepts a path of your package and
 create file `autoimport.go` which imports all your testcases when build fperf, then cleanup the
 generated files after buiding.
+
 Installing from source
 ```
 go install ./bin/fperf-build
@@ -108,10 +109,10 @@ fperf-build [packages]
 
 `packages` can be go importpath(see go help importpath) or absolute path to your package
 
-For example, build all testcases alang with fperf
+For example, build all testcases alang with fperf(using relative importpath)
 
 ```
-fperf-build ./testcases/* # using relative importpath
+fperf-build ./testcases/* 
 ```
 
 ## Run benchmark
