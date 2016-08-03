@@ -88,14 +88,30 @@ Edit fperf.go and insert
 import _ "github.com/shafreeck/fperf/example/demo"
 ```
 
-#### Use buildtestcase.sh
+#### Use fperf-build
 
-`buildtestcase.sh` is a script to build custom testcases. It accepts a path of your package and
+`fperf-build` is a tool to build custom testcases. It accepts a path of your package and
 create file `autoimport.go` which imports all your testcases when build fperf, then cleanup the
 generated files after buiding.
+Installing from source
+```
+go install ./bin/fperf-build
+```
+or  installing from github
+```
+go get github.com/shafreeck/fperf/bin/fperf-build
+```
 
 ```shell
-./buildtestcase.sh example/demo
+fperf-build [packages]
+```
+
+`packages` can be go importpath(see go help importpath) or absolute path to your package
+
+For example, build all testcases alang with fperf
+
+```
+fperf-build ./testcases/* # using relative importpath
 ```
 
 ## Run benchmark
