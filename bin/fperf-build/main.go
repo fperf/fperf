@@ -12,10 +12,11 @@ import (
 )
 
 type option struct {
-	output string
+	output  string
+	verbose bool
 }
 
-func gobuild(output string, imports []string) error {
+func gobuild(o *option, imports []string) error {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("package main\n")
 	for _, imp := range imports {
@@ -27,7 +28,11 @@ func gobuild(output string, imports []string) error {
 	}
 	defer os.Remove("autoimports.go")
 
-	cmd := exec.Command("go", "build", "-o", output)
+	args := []string{"build", "-o", o.output}
+	if o.verbose {
+		args = append(args, "-v")
+	}
+	cmd := exec.Command("go", args...)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	if err := cmd.Run(); err != nil {
@@ -37,8 +42,9 @@ func gobuild(output string, imports []string) error {
 }
 
 func main() {
-	o := option{}
+	o := &option{}
 	flag.StringVar(&o.output, "o", "fperf", "build output")
+	flag.BoolVar(&o.verbose, "v", false, "print the names of packages as they are compiled.")
 	flag.Parse()
 
 	paths := flag.Args()
@@ -64,7 +70,7 @@ func main() {
 		}
 		imports[i] = p.ImportPath
 	}
-	if err := gobuild(o.output, imports); err != nil {
+	if err := gobuild(o, imports); err != nil {
 		log.Fatalln(err)
 	}
 }
