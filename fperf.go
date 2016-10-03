@@ -182,7 +182,6 @@ func runUnary(done <-chan int, cli client.UnaryClient) {
 		}
 		eplase := time.Since(start)
 		stats.latencies = append(stats.latencies, eplase)
-		stats.histogram.Add(int64(eplase))
 		if s.Delay > 0 {
 			time.Sleep(s.Delay)
 		}
@@ -205,7 +204,6 @@ func run(done <-chan int, stream client.Stream) {
 			}
 			eplase := time.Since(start)
 			stats.latencies = append(stats.latencies, eplase)
-			stats.histogram.Add(int64(eplase))
 			if s.Delay > 0 {
 				time.Sleep(s.Delay)
 			}
@@ -270,7 +268,6 @@ func recv(done <-chan int, stream client.Stream) {
 				timer.Reset(time.Second)
 				eplase := time.Since(rtt.start)
 				stats.latencies = append(stats.latencies, eplase)
-				stats.histogram.Add(int64(eplase))
 			case <-timer.C:
 				log.Println("blocked on recv rtts")
 			}
@@ -295,6 +292,7 @@ func statPrint() {
 			for _, eplase := range latencies {
 				total++
 				sum += eplase
+				stats.histogram.Add(int64(eplase))
 			}
 			count := len(latencies)
 			if count != 0 {

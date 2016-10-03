@@ -13,7 +13,7 @@ func init() {
 }
 
 type testpbClient struct {
-	cli testpb.TestServiceClient
+	cli testpb.BenchmarkServiceClient
 }
 
 func newTestpbClient(flag *client.FlagSet) client.Client {
@@ -25,7 +25,7 @@ func (r *testpbClient) Dial(addr string) error {
 	if err != nil {
 		return err
 	}
-	r.cli = testpb.NewTestServiceClient(conn)
+	r.cli = testpb.NewBenchmarkServiceClient(conn)
 	return nil
 }
 
@@ -50,7 +50,7 @@ func (r *testpbClient) CreateStream(ctx context.Context) (client.Stream, error) 
 }
 
 type testpbStream struct {
-	stream testpb.TestService_StreamingCallClient
+	stream testpb.BenchmarkService_StreamingCallClient
 	pl     *testpb.Payload
 }
 
