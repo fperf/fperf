@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	MQTT "git.eclipse.org/gitroot/paho/org.eclipse.paho.mqtt.golang.git"
-	"github.com/shafreeck/fperf/client"
+	"github.com/shafreeck/fperf"
 	"time"
 
 	"io/ioutil"
@@ -16,7 +16,7 @@ import (
 var idgen func() string
 
 func init() {
-	client.Register("mqtt-publish", NewMqttClient, "benchmark of mqtt publish")
+	fperf.Register("mqtt-publish", NewMqttClient, "benchmark of mqtt publish")
 	idgen = idgenerator()
 }
 
@@ -39,7 +39,7 @@ type mqttClient struct {
 	topics  []string
 }
 
-func NewMqttClient(flag *client.FlagSet) client.Client {
+func NewMqttClient(flag *fperf.FlagSet) fperf.Client {
 	cli := new(mqttClient)
 	flag.StringVar(&cli.setting.username, "username", "test", "username used to login")
 	flag.StringVar(&cli.setting.password, "password", "test", "password of the username")

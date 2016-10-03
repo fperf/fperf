@@ -2,7 +2,7 @@ package http
 
 import (
 	"fmt"
-	"github.com/shafreeck/fperf/client"
+	"github.com/shafreeck/fperf"
 	"net/http"
 	"os"
 	"time"
@@ -20,7 +20,7 @@ type httpClient struct {
 	opts options
 }
 
-func newHTTPClient(flag *client.FlagSet) client.Client {
+func newHTTPClient(flag *fperf.FlagSet) fperf.Client {
 	c := new(httpClient)
 	flag.BoolVar(&c.opts.keepalive, "keepalive", true, "keep connection alive")
 	flag.StringVar(&c.opts.method, "method", "GET", "method of HTTP request, methods:GET,POST,HEAD,OPTIONS,PUT,DELETE")
@@ -66,5 +66,5 @@ func (c httpClient) Request() error {
 	return resp.Body.Close()
 }
 func init() {
-	client.Register("http", newHTTPClient, "HTTP performanch benchmark client")
+	fperf.Register("http", newHTTPClient, "HTTP performanch benchmark client")
 }
