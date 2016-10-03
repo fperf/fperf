@@ -6,6 +6,18 @@ fperf is a powerful and flexible framework which allows you to develop your own 
 **You create the client and send requests, fperf do the concurrency and statistics, then give you a report about qps and latency.**
 Any one can create powerful performance benchmark tools by fperf with only some knowledge about how to send a request.
 
+## Build fperf with the builtin clients
+```sh
+go install ./bin/fperf 
+```
+
+or use fperf-build
+```
+go install ./bin/fperf-build
+
+fperf-build ./clients/*
+```
+
 ## Quick Start
 If you can not wait to run `fperf` to see how it works, follow the [quickstart](docs/quickstart.md)
  here.
