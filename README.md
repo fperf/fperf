@@ -12,7 +12,7 @@ If you can not wait to run `fperf` to see how it works, follow the [quickstart](
 
 ## Customize testcase
 You can build your own testcase based on fperf framework. A testcase in fact is a client that
-implement the client.Client or to say more precisely client.UnaryClient or client.StreamClient.
+implement the fperf.Client or to say more precisely fperf.UnaryClient or fperf.StreamClient.
 
 An unary client is a client to send requests. It works in request-reply model. For example,
 HTTP benchmark client is an unary client. See [http client](testcases/http/httpclient.go).
@@ -48,13 +48,13 @@ package demo
 
 import (
 	"fmt"
-	"github.com/shafreeck/fperf/client"
+	"github.com/shafreeck/fperf"
 	"time"
 )
 
 type demoClient struct{}
 
-func newDemoClient(flag *client.FlagSet) client.Client {
+func newDemoClient(flag *fperf.FlagSet) fperf.Client {
 	return &demoClient{}
 }
 ```
@@ -75,7 +75,7 @@ func (c *demoClient) Request() error {
 3.Register to fperf
 ```go
 func init() {
-	client.Register("demo", dewDemoClient, "This is a demo client discription")
+	fperf.Register("demo", dewDemoClient, "This is a demo client discription")
 }
 ```
 
