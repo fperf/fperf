@@ -10,12 +10,12 @@ Any one can create powerful performance benchmark tools by fperf with only some 
 If you can not wait to run `fperf` to see how it works, follow the [quickstart](docs/quickstart.md)
  here.
 
-## Customize testcase
-You can build your own testcase based on fperf framework. A testcase in fact is a client that
+## Customize client 
+You can build your own client based on fperf framework. A client in fact is a client that
 implement the fperf.Client or to say more precisely fperf.UnaryClient or fperf.StreamClient.
 
 An unary client is a client to send requests. It works in request-reply model. For example,
-HTTP benchmark client is an unary client. See [http client](testcases/http/httpclient.go).
+HTTP benchmark client is an unary client. See [http client](clients/http/httpclient.go).
 ```go
 type Client interface {
         Dial(addr string) error
@@ -40,7 +40,7 @@ type Stream interface {
 }
 ```
 
-### Three steps to create your own testcase
+### Three steps to create your own client
 1.Create the "NewClient" function
 
 ```go
@@ -79,19 +79,13 @@ func init() {
 }
 ```
 
-### Building custom testcases
-You testcase should be in the same workspace(same $GOPATH) with fperf. There are two ways to build the custom testcase.  
-#### Importing the testcase package explicitly
-
-Edit fperf.go and insert
-```go
-import _ "github.com/shafreeck/fperf/example/demo"
-```
+### Building custom clients
+You client should be in the same workspace(same $GOPATH) with fperf.
 
 #### Using fperf-build
 
-`fperf-build` is a tool to build custom testcases. It accepts a path of your package and
-create file `autoimport.go` which imports all your testcases when build fperf, then cleanup the
+`fperf-build` is a tool to build custom clients. It accepts a path of your package and
+create file `autoimport.go` which imports all your clients when build fperf, then cleanup the
 generated files after buiding.
 
 Installing from source
@@ -109,10 +103,10 @@ fperf-build [packages]
 
 `packages` can be go importpath(see go help importpath) or absolute path to your package
 
-For example, build all testcases alang with fperf(using relative importpath)
+For example, build all clients alang with fperf(using relative importpath)
 
 ```
-fperf-build ./testcases/* 
+fperf-build ./clients/* 
 ```
 
 ## Run benchmark
