@@ -373,7 +373,7 @@ func main() {
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		_ = <-c
-		stats.histogram.Value().Print(os.Stdout)
+		stats.histogram.Print(os.Stdout)
 		os.Exit(0)
 	}()
 
@@ -404,10 +404,10 @@ func main() {
 
 	stats.latencies = make([]time.Duration, 0, 500000)
 	histopt := hist.HistogramOptions{
-		NumBuckets:         16,
-		GrowthFactor:       1.8,
-		SmallestBucketSize: 1000,
-		MinValue:           10000,
+		NumBuckets:     16,
+		GrowthFactor:   1.8,
+		BaseBucketSize: 1000,
+		MinValue:       10000,
 	}
 	stats.histogram = hist.NewHistogram(histopt)
 	clients := createClients(s.Connection, s.Address)
