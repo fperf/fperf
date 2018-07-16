@@ -34,7 +34,7 @@ type setting struct {
 	verbose bool
 }
 type mqttClient struct {
-	cli     *MQTT.Client
+	cli     MQTT.Client
 	setting setting
 	topics  []string
 }
