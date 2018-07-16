@@ -3,7 +3,7 @@ package mqtt
 import (
 	"crypto/tls"
 	"fmt"
-	MQTT "git.eclipse.org/gitroot/paho/org.eclipse.paho.mqtt.golang.git"
+	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"github.com/shafreeck/fperf"
 	"time"
 
