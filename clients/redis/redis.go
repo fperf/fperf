@@ -1,7 +1,7 @@
 /*
 This is an example about how to build a redis benchmark to using fperf
 
-A fperf testcase in fact is an implementation of client.UnaryClient.
+A fperf testcase in fact is an implementation of fperf.UnaryClient.
 The client has two method:
 
 	Dial(addr string) error
@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/garyburd/redigo/redis"
-	"github.com/shafreeck/fperf/client"
+	"github.com/shafreeck/fperf"
 )
 
 var seq func() string = seqCreater(0)
@@ -35,7 +35,7 @@ type options struct {
 	verbose bool
 }
 
-//A client is a struct that should implement client.UnaryClient
+//A client is a struct that should implement fperf.UnaryClient
 type redisClient struct {
 	args    []string   //the args of client, we use redis command as args
 	rds     redis.Conn //the redis connection, should be created when call Dial
@@ -44,7 +44,7 @@ type redisClient struct {
 
 //newRedisClient create the client object. The function should be
 //registered to fperf, fperf -h will list all the registered clients(testcases)
-func newRedisClient(flag *client.FlagSet) client.Client {
+func newRedisClient(flag *fperf.FlagSet) fperf.Client {
 	c := new(redisClient)
 	flag.BoolVar(&c.options.verbose, "v", false, "verbose")
 
@@ -178,6 +178,6 @@ func (c *redisClient) Request() error {
 
 //Register to fperf
 func init() {
-	rand.Seed(time.Now().UnixNano())
-	client.Register("redis", newRedisClient, "redis performance benchmark")
+	//rand.Seed(time.Now().UnixNano())
+	fperf.Register("redis", newRedisClient, "redis performance benchmark")
 }

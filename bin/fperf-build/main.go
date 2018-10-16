@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 )
 
+const filename = "fperf_main.go"
+
 type option struct {
 	output  string
 	verbose bool
@@ -19,16 +21,22 @@ type option struct {
 func gobuild(o *option, imports []string) error {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("package main\n")
+	buf.WriteString(`import "github.com/shafreeck/fperf"` + "\n")
 	for _, imp := range imports {
 		buf.WriteString(`import _ "` + imp + `"` + "\n")
 	}
+	buf.WriteString(`
+	func main() {
+		fperf.Main()
+	}
+	`)
 
-	if err := ioutil.WriteFile("autoimports.go", buf.Bytes(), 0655); err != nil {
+	if err := ioutil.WriteFile(filename, buf.Bytes(), 0655); err != nil {
 		log.Fatalln(err)
 	}
-	defer os.Remove("autoimports.go")
+	defer os.Remove(filename)
 
-	args := []string{"build", "-o", o.output}
+	args := []string{"build", "-o", o.output, filename}
 	if o.verbose {
 		args = append(args, "-v")
 	}
@@ -52,6 +60,10 @@ func main() {
 	cwd, err := os.Getwd()
 	if err != nil {
 		log.Fatalln(err)
+	}
+
+	if len(paths) == 0 {
+		paths = append(paths, cwd)
 	}
 
 	imports := make([]string, len(paths))

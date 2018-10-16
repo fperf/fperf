@@ -2,13 +2,13 @@ package demo
 
 import (
 	"fmt"
-	"github.com/shafreeck/fperf/client"
+	"github.com/shafreeck/fperf"
 	"time"
 )
 
 type demoClient struct{}
 
-func newDemoClient(flag *client.FlagSet) client.Client {
+func newDemoClient(flag *fperf.FlagSet) fperf.Client {
 	return &demoClient{}
 }
 
@@ -23,5 +23,5 @@ func (c *demoClient) Request() error {
 }
 
 func init() {
-	client.Register("demo", newDemoClient, "This is a demo client discription")
+	fperf.Register("demo", newDemoClient, "This is a demo client discription")
 }

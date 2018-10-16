@@ -9,13 +9,13 @@ Three steps to create your own testcase
 
 	import (
 		"fmt"
-		"github.com/shafreeck/fperf/client"
+		"github.com/shafreeck/fperf"
 		"time"
 	)
 
 	type DemoClient struct{}
 
-	func NewDemoClient(flag *client.FlagSet) client.Client {
+	func NewDemoClient(flag *fperf.FlagSet) fperf.Client {
 		return &DemoClient{}
 	}
 
@@ -34,7 +34,7 @@ Three steps to create your own testcase
 3. Register to fperf
 
 	func init() {
-		client.Register("demo", NewDemoClient, "This is a demo client discription")
+		fperf.Register("demo", NewDemoClient, "This is a demo client discription")
 	}
 
 
@@ -44,15 +44,11 @@ http is a simple builtin testcase to benchmark http servers
 
 	fperf -cpu 8 -connection 10 http http://example.com
 */
-package main
+package fperf
 
 import (
 	"flag"
 	"fmt"
-	db "github.com/influxdata/influxdb/client/v2"
-	"github.com/shafreeck/fperf/client"
-	hist "github.com/shafreeck/fperf/stats"
-	"golang.org/x/net/context"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
@@ -62,6 +58,10 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	db "github.com/influxdata/influxdb/client/v2"
+	hist "github.com/shafreeck/fperf/stats"
+	"golang.org/x/net/context"
 )
 
 type setting struct {
@@ -96,10 +96,10 @@ type roundtrip struct {
 
 //create the testcase clients, n is the number of clients, set by
 //flag -connection
-func createClients(n int, addr string) []client.Client {
-	clients := make([]client.Client, n)
+func createClients(n int, addr string) []Client {
+	clients := make([]Client, n)
 	for i := 0; i < n; i++ {
-		cli := client.NewClient(s.Target)
+		cli := NewClient(s.Target)
 		if cli == nil {
 			log.Fatalf("Can not find client %q for benchmark\n", s.Target)
 		}
@@ -113,18 +113,18 @@ func createClients(n int, addr string) []client.Client {
 }
 
 //create streams for every client. n is the number of streams per client
-func createStreams(n int, clients []client.Client) []client.Stream {
-	streams := make([]client.Stream, n*len(clients))
+func createStreams(n int, clients []Client) []Stream {
+	streams := make([]Stream, n*len(clients))
 	for cur, cli := range clients {
 		for i := 0; i < n; i++ {
-			if cli, ok := cli.(client.StreamClient); ok {
+			if cli, ok := cli.(StreamClient); ok {
 				stream, err := cli.CreateStream(context.Background())
 				if err != nil {
 					log.Fatalf("StreamCall faile to create new stream, %v", err)
 				}
 				streams[cur*n+i] = stream
 			} else {
-				log.Fatalln(s.Target, " do not implement the client.StreamClient")
+				log.Fatalln(s.Target, " do not implement the fperf.StreamClient")
 			}
 		}
 	}
@@ -132,7 +132,7 @@ func createStreams(n int, clients []client.Client) []client.Stream {
 }
 
 //run benchmark for stream clients, can be in async or sync mode
-func benchmarkStream(n int, streams []client.Stream) {
+func benchmarkStream(n int, streams []Stream) {
 	var wg sync.WaitGroup
 	for _, stream := range streams {
 		for i := 0; i < n; i++ {
@@ -140,11 +140,11 @@ func benchmarkStream(n int, streams []client.Stream) {
 			//would be changed after the goroutine created
 			if s.Async {
 				wg.Add(2)
-				go func(stream client.Stream) { send(nil, stream); wg.Done() }(stream)
-				go func(stream client.Stream) { recv(nil, stream); wg.Done() }(stream)
+				go func(stream Stream) { send(nil, stream); wg.Done() }(stream)
+				go func(stream Stream) { recv(nil, stream); wg.Done() }(stream)
 			} else {
 				wg.Add(1)
-				go func(stream client.Stream) { run(nil, stream); wg.Done() }(stream)
+				go func(stream Stream) { run(nil, stream); wg.Done() }(stream)
 			}
 		}
 	}
@@ -153,15 +153,15 @@ func benchmarkStream(n int, streams []client.Stream) {
 }
 
 //run benchmark for unary clients
-func benchmarkUnary(n int, clients []client.Client) {
+func benchmarkUnary(n int, clients []Client) {
 	var wg sync.WaitGroup
 	for _, cli := range clients {
 		for i := 0; i < n; i++ {
 			wg.Add(1)
-			if cli, ok := cli.(client.UnaryClient); ok {
-				go func(cli client.UnaryClient) { runUnary(nil, cli); wg.Done() }(cli)
+			if cli, ok := cli.(UnaryClient); ok {
+				go func(cli UnaryClient) { runUnary(nil, cli); wg.Done() }(cli)
 			} else {
-				log.Fatalln(s.Target, " does not implement the client.UnaryClient")
+				log.Fatalln(s.Target, " does not implement the fperf.UnaryClient")
 			}
 		}
 	}
@@ -169,7 +169,7 @@ func benchmarkUnary(n int, clients []client.Client) {
 	wg.Wait()
 }
 
-func runUnary(done <-chan int, cli client.UnaryClient) {
+func runUnary(done <-chan int, cli UnaryClient) {
 	for i := 0; s.N == 0 || i < s.N; i++ {
 		//select {
 		//case <-done:
@@ -182,14 +182,13 @@ func runUnary(done <-chan int, cli client.UnaryClient) {
 		}
 		eplase := time.Since(start)
 		stats.latencies = append(stats.latencies, eplase)
-		stats.histogram.Add(int64(eplase))
 		if s.Delay > 0 {
 			time.Sleep(s.Delay)
 		}
 		//	}
 	}
 }
-func run(done <-chan int, stream client.Stream) {
+func run(done <-chan int, stream Stream) {
 	for i := 0; s.N == 0 || i < s.N; i++ {
 		select {
 		case <-done:
@@ -205,7 +204,6 @@ func run(done <-chan int, stream client.Stream) {
 			}
 			eplase := time.Since(start)
 			stats.latencies = append(stats.latencies, eplase)
-			stats.histogram.Add(int64(eplase))
 			if s.Delay > 0 {
 				time.Sleep(s.Delay)
 			}
@@ -213,7 +211,7 @@ func run(done <-chan int, stream client.Stream) {
 	}
 }
 
-func send(done <-chan int, stream client.Stream) {
+func send(done <-chan int, stream Stream) {
 	timer := time.NewTimer(time.Second)
 	for i := 0; s.N == 0 || i < s.N; i++ {
 		select {
@@ -244,7 +242,7 @@ func send(done <-chan int, stream client.Stream) {
 		}
 	}
 }
-func recv(done <-chan int, stream client.Stream) {
+func recv(done <-chan int, stream Stream) {
 	timer := time.NewTimer(time.Second)
 	for i := 0; s.N == 0 || i < s.N; i++ {
 		select {
@@ -270,7 +268,6 @@ func recv(done <-chan int, stream client.Stream) {
 				timer.Reset(time.Second)
 				eplase := time.Since(rtt.start)
 				stats.latencies = append(stats.latencies, eplase)
-				stats.histogram.Add(int64(eplase))
 			case <-timer.C:
 				log.Println("blocked on recv rtts")
 			}
@@ -295,6 +292,7 @@ func statPrint() {
 			for _, eplase := range latencies {
 				total++
 				sum += eplase
+				stats.histogram.Add(int64(eplase))
 			}
 			count := len(latencies)
 			if count != 0 {
@@ -339,7 +337,7 @@ func usage() {
 	fmt.Printf("Usage: %v [options] <client>\noptions:\n", os.Args[0])
 	flag.PrintDefaults()
 	fmt.Println("clients:")
-	for name, desc := range client.AllClients() {
+	for name, desc := range AllClients() {
 		fmt.Printf(" %s", name)
 		if len(desc) > 0 {
 			fmt.Printf("\t: %s", desc)
@@ -348,7 +346,7 @@ func usage() {
 	}
 }
 
-func main() {
+func Main() {
 	flag.IntVar(&s.Connection, "connection", 1, "number of connection")
 	flag.IntVar(&s.Stream, "stream", 1, "number of streams per connection")
 	flag.IntVar(&s.Goroutine, "goroutine", 1, "number of goroutines per stream")
@@ -375,7 +373,7 @@ func main() {
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		_ = <-c
-		stats.histogram.Value().Print(os.Stdout)
+		stats.histogram.Print(os.Stdout)
 		os.Exit(0)
 	}()
 
@@ -406,10 +404,10 @@ func main() {
 
 	stats.latencies = make([]time.Duration, 0, 500000)
 	histopt := hist.HistogramOptions{
-		NumBuckets:         16,
-		GrowthFactor:       1.8,
-		SmallestBucketSize: 1000,
-		MinValue:           10000,
+		NumBuckets:     16,
+		GrowthFactor:   1.8,
+		BaseBucketSize: 1000,
+		MinValue:       10000,
 	}
 	stats.histogram = hist.NewHistogram(histopt)
 	clients := createClients(s.Connection, s.Address)
@@ -417,10 +415,10 @@ func main() {
 	switch s.CallType {
 	case "auto":
 		switch cli.(type) {
-		case client.StreamClient:
+		case StreamClient:
 			streams := createStreams(s.Stream, clients)
 			benchmarkStream(s.Goroutine, streams)
-		case client.UnaryClient:
+		case UnaryClient:
 			benchmarkUnary(s.Goroutine, clients)
 		}
 	case "stream":
