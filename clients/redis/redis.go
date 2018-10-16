@@ -21,7 +21,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/shafreeck/fperf"
