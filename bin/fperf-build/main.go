@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-const filename = "fperf_main.go"
+const filename = "/tmp/fperf_main.go"
 
 type option struct {
 	output  string
