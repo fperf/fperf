@@ -231,8 +231,13 @@ func (c *redisClient) RequestBatch() error {
 	if err := c.rds.Flush(); err != nil {
 		return err
 	}
-	_, err := c.rds.Receive()
-	return err
+	for _ = range c.commands {
+		_, err := c.rds.Receive()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 //Request send a redis request and return the error if there is
