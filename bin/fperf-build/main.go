@@ -21,7 +21,7 @@ type option struct {
 func gobuild(o *option, imports []string) error {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("package main\n")
-	buf.WriteString(`import "github.com/shafreeck/fperf"` + "\n")
+	buf.WriteString(`import "github.com/fperf/fperf"` + "\n")
 	for _, imp := range imports {
 		buf.WriteString(`import _ "` + imp + `"` + "\n")
 	}
