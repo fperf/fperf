@@ -55,6 +55,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -97,6 +98,15 @@ type roundtrip struct {
 //create the testcase clients, n is the number of clients, set by
 //flag -connection
 func createClients(n int, addr string) []Client {
+	addrs := strings.Split(addr, ";")
+	getAddr := func(addrs []string) func() string {
+		i := -1
+		size := len(addrs)
+		return func() string {
+			i++
+			return addrs[i%size]
+		}
+	}(addrs)
 	clients := make([]Client, n)
 	for i := 0; i < n; i++ {
 		cli := NewClient(s.Target)
@@ -104,7 +114,7 @@ func createClients(n int, addr string) []Client {
 			log.Fatalf("Can not find client %q for benchmark\n", s.Target)
 		}
 
-		if err := cli.Dial(addr); err != nil {
+		if err := cli.Dial(getAddr()); err != nil {
 			log.Fatalln(err)
 		}
 		clients[i] = cli
