@@ -1,7 +1,7 @@
 package grpc
 
 import (
-	"github.com/shafreeck/fperf"
+	"github.com/fperf/fperf"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	testpb "google.golang.org/grpc/benchmark/grpc_testing"

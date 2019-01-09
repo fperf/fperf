@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
-	"github.com/shafreeck/fperf"
+	"github.com/fperf/fperf"
 	"time"
 
 	"io/ioutil"

@@ -2,7 +2,7 @@ package demo
 
 import (
 	"fmt"
-	"github.com/shafreeck/fperf"
+	"github.com/fperf/fperf"
 	"time"
 )
 

@@ -6,7 +6,7 @@ This is a tutorial about how to use the fperf command line. We will take the bui
 
 then
 ```
-go get github.com/shafreeck/fperf/bin/fperf
+go get github.com/fperf/fperf/bin/fperf
 ```
 
 ## Run benchmark

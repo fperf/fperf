@@ -1,6 +1,6 @@
 # Framework of performance testing 
 [![Build Status](https://travis-ci.org/fperf/fperf.svg?branch=master)](https://travis-ci.org/fperf/fperf)
-[![Go Report Card](https://goreportcard.com/badge/github.com/shafreeck/fperf)](https://goreportcard.com/report/github.com/shafreeck/fperf)
+[![Go Report Card](https://goreportcard.com/badge/github.com/fperf/fperf)](https://goreportcard.com/report/github.com/fperf/fperf)
 
 fperf is a powerful and flexible framework which allows you to develop your own benchmark tools so much easy.
 **You create the client and send requests, fperf do the concurrency and statistics, then give you a report about qps and latency.**
@@ -60,7 +60,7 @@ package demo
 
 import (
 	"fmt"
-	"github.com/shafreeck/fperf"
+	"github.com/fperf/fperf"
 	"time"
 )
 
@@ -106,7 +106,7 @@ go install ./bin/fperf-build
 ```
 or  installing from github
 ```
-go get github.com/shafreeck/fperf/bin/fperf-build
+go get github.com/fperf/fperf/bin/fperf-build
 ```
 
 ```shell

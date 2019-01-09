@@ -9,7 +9,7 @@ Three steps to create your own testcase
 
 	import (
 		"fmt"
-		"github.com/shafreeck/fperf"
+		"github.com/fperf/fperf"
 		"time"
 	)
 
@@ -50,6 +50,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -60,8 +61,8 @@ import (
 	"syscall"
 	"time"
 
+	hist "github.com/fperf/fperf/stats"
 	db "github.com/influxdata/influxdb/client/v2"
-	hist "github.com/shafreeck/fperf/stats"
 	"golang.org/x/net/context"
 )
 
@@ -81,6 +82,7 @@ type setting struct {
 	Target     string
 	CallType   string
 	InfluxDB   string
+	Seed       int64
 }
 
 type statistics struct {
@@ -372,6 +374,7 @@ func Main() {
 	flag.BoolVar(&s.Async, "async", false, "send and recv in seperate goroutines")
 	flag.StringVar(&s.CallType, "type", "auto", "set the call type:unary, stream or auto. default is auto")
 	flag.StringVar(&s.InfluxDB, "influxdb", "", "writing stats to influxdb, specify the address in this option")
+	flag.Int64Var(&s.Seed, "seed", 0, "seed of the global math/rand")
 	flag.Usage = usage
 	flag.Parse()
 
@@ -393,6 +396,8 @@ func Main() {
 		runtime.SetBlockProfileRate(1)
 		log.Println(http.ListenAndServe(":6060", nil))
 	}()
+
+	rand.Seed(s.Seed)
 
 	if s.Burst > 0 {
 		burst = make(chan int, s.Burst)
