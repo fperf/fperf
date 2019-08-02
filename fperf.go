@@ -62,7 +62,6 @@ import (
 	"time"
 
 	hist "github.com/fperf/fperf/stats"
-	db "github.com/influxdata/influxdb/client/v2"
 	"golang.org/x/net/context"
 )
 
@@ -310,28 +309,6 @@ func statPrint() {
 			count := len(latencies)
 			if count != 0 {
 				log.Printf("latency %v qps %d total %v\n", sum/time.Duration(count), int64(float64(count)/float64(s.Tick)*float64(time.Second)), total)
-				if influxdb != nil {
-					bp, _ := db.NewBatchPoints(db.BatchPointsConfig{
-						Database:  "fperf",
-						Precision: "s",
-					})
-					tags := map[string]string{"latency": "latency", "qps": "qps"}
-					fields := map[string]interface{}{
-						"latency": float64(sum) / float64(count) / 1000.0,
-						"qps":     int64(float64(count) / float64(s.Tick) * float64(time.Second)),
-					}
-					pt, err := db.NewPoint("benchmark", tags, fields, time.Now())
-					if err != nil {
-						log.Println("Error: ", err.Error())
-					}
-					bp.AddPoint(pt)
-
-					// Write the batch
-					err = influxdb.Write(bp)
-					if err != nil {
-						log.Println("Error: ", err.Error())
-					}
-				}
 			} else {
 				log.Printf("blocking...")
 			}
@@ -344,7 +321,6 @@ var stats statistics
 var rtts = make(chan *roundtrip, 10*1024*1024)
 var mutex sync.RWMutex
 var burst chan int
-var influxdb db.Client
 
 func usage() {
 	fmt.Printf("Usage: %v [options] <client>\noptions:\n", os.Args[0])
@@ -373,7 +349,6 @@ func Main() {
 	flag.StringVar(&s.Address, "server", "127.0.0.1:8804", "address of the target server")
 	flag.BoolVar(&s.Async, "async", false, "send and recv in seperate goroutines")
 	flag.StringVar(&s.CallType, "type", "auto", "set the call type:unary, stream or auto. default is auto")
-	flag.StringVar(&s.InfluxDB, "influxdb", "", "writing stats to influxdb, specify the address in this option")
 	flag.Int64Var(&s.Seed, "seed", 0, "seed of the global math/rand")
 	flag.Usage = usage
 	flag.Parse()
@@ -401,21 +376,6 @@ func Main() {
 
 	if s.Burst > 0 {
 		burst = make(chan int, s.Burst)
-	}
-
-	if len(s.InfluxDB) > 0 {
-		c, err := db.NewHTTPClient(db.HTTPConfig{
-			Addr: s.InfluxDB,
-		})
-		if err != nil {
-			log.Fatalf("Error creating InfluxDB Client: %v", err.Error())
-		}
-		defer c.Close()
-		q := db.NewQuery("CREATE DATABASE fperf", "", "")
-		if response, err := c.Query(q); err == nil && response.Error() == nil {
-			log.Println(response.Results)
-		}
-		influxdb = c
 	}
 
 	stats.latencies = make([]time.Duration, 0, 500000)
