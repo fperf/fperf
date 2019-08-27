@@ -140,8 +140,6 @@ options:
         wait delay time before send the next request
   -goroutine int
         number of goroutines per stream (default 1)
-  -influxdb string
-        writing stats to influxdb, specify the address in this option
   -recv
         perform recv action (default true)
   -send

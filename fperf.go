@@ -80,7 +80,6 @@ type setting struct {
 	Async      bool
 	Target     string
 	CallType   string
-	InfluxDB   string
 	Seed       int64
 }
 
