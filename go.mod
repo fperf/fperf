@@ -9,4 +9,5 @@ require (
 	github.com/garyburd/redigo v1.6.0 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
+	golang.org/x/tools v0.0.0-20200119215504-eb0d8dd85bcc
 )

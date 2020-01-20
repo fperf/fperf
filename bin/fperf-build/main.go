@@ -3,12 +3,15 @@ package main
 import (
 	"bytes"
 	"flag"
-	"go/build"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
+
+	"golang.org/x/tools/go/packages"
 )
 
 const filename = "/tmp/fperf_main.go"
@@ -56,6 +59,10 @@ func main() {
 	flag.Parse()
 
 	paths := flag.Args()
+	if len(paths) == 0 {
+		flag.Usage()
+		return
+	}
 
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -67,21 +74,20 @@ func main() {
 	}
 
 	imports := make([]string, len(paths))
-	for i := range paths {
-		path := paths[i]
-		if filepath.IsAbs(path) {
-			var err error
-			path, err = filepath.Rel(cwd, path)
+	for i, p := range paths {
+		cfg := packages.Config{}
+		if strings.HasPrefix(p, "./") {
+			cfg.Dir, _ = filepath.Abs(p)
+			pkgs, err := packages.Load(&cfg, "./")
 			if err != nil {
 				log.Fatalln(err)
 			}
+			imports[i] = pkgs[i].String()
+		} else {
+			imports[i] = p
 		}
-		p, err := build.Import(path, cwd, 0)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		imports[i] = p.ImportPath
 	}
+	fmt.Println(paths, imports)
 	if err := gobuild(o, imports); err != nil {
 		log.Fatalln(err)
 	}
